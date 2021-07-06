@@ -130,7 +130,8 @@ switch the_function
   case 'Redraw'    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Re-compute the contour data
-    ps_data = switch_redraw(fig,cax,this_ver,ps_data);
+
+ps_data = switch_redraw(fig,cax,this_ver,ps_data);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   case 'RedrawContour'

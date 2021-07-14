@@ -2,7 +2,7 @@ function varargout = GUI(varargin)
 % GUI MATLAB code for GUI.fig
 %      GUI, by itself, creates a new GUI or raises the existing
 %      singleton*.
-%
+%guid
 %      H = GUI returns the handle to a new GUI or the handle to
 %      the existing singleton*.
 %
@@ -212,10 +212,10 @@ end
 % --- Executes on button press in GoButton.
 function GoButton_Callback(hObject, eventdata, handles)
     % Take input
-    blockSize = str2double(get(handles.BlockSizeEdit, 'String'));
-    matrixSize = str2double(get(handles.MatrixSizeEdit, 'String'));
-    numberOfPerturbations = str2double(get(handles.PerturbationsEdit, 'String'));
-    epsilon = str2double(get(handles.EpsilonEdit, 'String'));
+    blockSize = get(handles.BlockSizeEdit, 'String');
+    matrixSize = get(handles.MatrixSizeEdit, 'String');
+    numberOfPerturbations = get(handles.PerturbationsEdit, 'String');
+    epsilon = get(handles.EpsilonEdit, 'String');
     isSymmetric = 0;
     isDefault = 0;
     
@@ -229,7 +229,26 @@ function GoButton_Callback(hObject, eventdata, handles)
     matrixType = matrixTypeContents{get(handles.MatrixTypeEdit,'Value')};
     
     % Sanitize input
+    if(isempty(blockSize) || isnan(str2double(blockSize)))
+        msgbox('Invalid Input Provided');
+        return
+    elseif(isempty(matrixSize) || isnan(str2double(matrixSize)))
+        msgbox('Invalid Input Provided');
+        return
+    elseif(isempty(numberOfPerturbations) || isnan(str2double(numberOfPerturbations)))
+        msgbox('Invalid Input Provided');
+        return
+    elseif(isempty(epsilon) || isnan(str2double(epsilon)))
+        msgbox('Invalid Input Provided');
+        return
+    end
     
+    blockSize = uint8(str2double(blockSize));
+    matrixSize = uint8(str2double(matrixSize));
+    numberOfPerturbations = uint8(str2double(numberOfPerturbations));
+    epsilon = str2double(epsilon);
+    
+    % Calculate based on the given parameters
     if(strcmp(symmetricity, 'Symmetric') == 1)
         isSymmetric = 1;
     end
@@ -242,8 +261,8 @@ function GoButton_Callback(hObject, eventdata, handles)
     
     if(strcmp(structure, 'Unstructured') == 1)
         unstructured_pseudospectra(matrixSize, numberOfPerturbations, epsilon, isDefault);
-    elseif(strcmp(structure, 'Toeplitz') == 1)
-        toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault);
+    elseif(strcmp(structure, 'Block Toeplitz') == 1)
+        block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault);
     end
     
     

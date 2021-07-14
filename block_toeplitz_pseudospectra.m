@@ -1,4 +1,4 @@
-function [] = toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault)    
+function [] = block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault)    
     A = [];
     x = [];
    

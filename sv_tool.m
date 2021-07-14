@@ -38,14 +38,12 @@ function [] = sv_tool(blockSize, matrixSize, numberOfPerturbations, epsilon, isS
     else
         
         if(isSymmetric == 1)
-            A = generate_toeplitz_default_symmetric(blockSize, matrixSize);
+            A = generate_toeplitz_symmetric(blockSize, matrixSize);
         else
-            A = generate_toeplitz_default_asymmetric(blockSize, matrixSize);
+            A = generate_toeplitz_asymmetric(blockSize, matrixSize);
         end
         
     end
-    
-    A = generate_toeplitz_asymmetric(blockSize, matrixSize);
     
     % Take the current user and todays date 
     date = datetime('now');

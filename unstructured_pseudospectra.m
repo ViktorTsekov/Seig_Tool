@@ -1,11 +1,25 @@
-function [] = unstructured_pseudospectra(matrixSize, numberOfPerturbations, epsilon, isDefault)
+function [] = unstructured_pseudospectra(matrixSize, numberOfPerturbations, epsilon, isDefault, retainMatrix)
     A = [];
     x = [];
     
-    if(isDefault == 1)
-        A = randi([0, 1000], [matrixSize, matrixSize]);
+    if(retainMatrix == 0)
+        
+        if(isDefault == 1)
+            A = randi([0, 1000], [matrixSize, matrixSize]);
+        else
+            A = rand(matrixSize).*exp(2 * pi * 1i * rand(matrixSize));
+        end
+        
+        save('matrixA.mat', 'A');
     else
-        A = rand(matrixSize).*exp(2 * pi * 1i * rand(matrixSize));
+        file = matfile('matrixA.mat');
+        A = file.A;
+        
+        if(size(A, 1) ~= matrixSize)
+            msgbox('Size Mismatch');
+            return
+        end
+        
     end
     
     % Take the current user and todays date 
@@ -31,8 +45,8 @@ function [] = unstructured_pseudospectra(matrixSize, numberOfPerturbations, epsi
     end
     
     % Plot the combined eigenvalues of the perturbations
-    plot(real(x), imag(x), '.');
-    axis equal;
+    plot(real(x), imag(x), '.r');
+    axis equal;   
     
     % Wait 1 second
     pause(1);

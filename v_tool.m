@@ -37,17 +37,19 @@ function [] = v_tool(A, numberOfPerturbations, epsilon)
     end
     
     % Plot the combined eigenvalues of the perturbations
-    plot(real(x), imag(x), '.');
+    % plot(real(x), imag(x), '.');
     axis equal;
+    hold on
+        scatter1 = scatter(real(x), imag(x), 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
+        scatter1.MarkerFaceAlpha = 0.1;
+    hold off
     
     % Wait 1 second
     pause(1);
     
-    % Take screenshot of the plot
-    image = capture_screen(610, 30, 700, 600); % [left top width height]
-    
     % Save all of the data to a folder on the Desktop
-    imwrite(image, [directory, '\Perturbation_Plot.png']);
+    path = fullfile(directory, '\Perturbation_Plot.png');
+    saveas(gcf, path);
     writematrix(A, [directory, '\Original_Matrix.txt'], 'Delimiter', 'tab');
     writematrix(epsilon, [directory, '\Epsilon.txt'], 'Delimiter', 'tab');
     writematrix(numberOfPerturbations, [directory, '\Number_of_Perturbations.txt'], 'Delimiter', 'tab');

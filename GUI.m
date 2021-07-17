@@ -22,7 +22,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-% Last Modified by GUIDE v2.5 14-Jul-2021 00:26:37
+% Last Modified by GUIDE v2.5 16-Jul-2021 18:49:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -216,9 +216,10 @@ function GoButton_Callback(hObject, eventdata, handles)
     matrixSize = get(handles.MatrixSizeEdit, 'String');
     numberOfPerturbations = get(handles.PerturbationsEdit, 'String');
     epsilon = get(handles.EpsilonEdit, 'String');
+    retainMatrix = get(handles.RetainMatrix, 'Value');
     isSymmetric = 0;
     isDefault = 0;
-    
+
     structureContents = get(handles.StructureEdit,'String'); 
     structure = structureContents{get(handles.StructureEdit,'Value')};
     
@@ -260,9 +261,11 @@ function GoButton_Callback(hObject, eventdata, handles)
     end
     
     if(strcmp(structure, 'Unstructured') == 1)
-        unstructured_pseudospectra(matrixSize, numberOfPerturbations, epsilon, isDefault);
+        unstructured_pseudospectra(matrixSize, numberOfPerturbations, epsilon, isDefault, retainMatrix);
     elseif(strcmp(structure, 'Block Toeplitz') == 1)
-        block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault);
+        block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault, retainMatrix, 0);
+    elseif(strcmp(structure, 'Block Hankel') == 1)
+        block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault, retainMatrix, 1);
     end
     
     
@@ -298,6 +301,17 @@ end
 % --- Executes on button press in ClearPlotButton.
 function ClearPlotButton_Callback(hObject, eventdata, handles)
     cla reset;
+    A = [];
+    save('matrixA.mat', 'A');
 % hObject    handle to ClearPlotButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in RetainMatrix.
+function RetainMatrix_Callback(hObject, eventdata, handles)
+% hObject    handle to RetainMatrix (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RetainMatrix

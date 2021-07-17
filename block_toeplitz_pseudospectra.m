@@ -1,22 +1,40 @@
-function [] = block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault)    
+function [] = block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPerturbations, epsilon, isSymmetric, isDefault, retainMatrix, isHankel)    
     A = [];
     x = [];
-   
-    if(isDefault == 1)
+    
+    if(retainMatrix == 0)
         
-       if(isSymmetric == 1)
-            A = generate_toeplitz_default_symmetric(blockSize, matrixSize);
-        else
-            A = generate_toeplitz_default_asymmetric(blockSize, matrixSize);
-       end
+        if(isDefault == 1)
+
+           if(isSymmetric == 1)
+                A = generate_toeplitz_default_symmetric(blockSize, matrixSize);
+            else
+                A = generate_toeplitz_default_asymmetric(blockSize, matrixSize);
+           end
+
+        else    
+
+            if(isSymmetric == 1)
+                A = generate_toeplitz_symmetric(blockSize, matrixSize);
+            else
+                A = generate_toeplitz_asymmetric(blockSize, matrixSize);
+           end
+
+        end
         
-    else    
+        if(isHankel == 1)
+           A = fliplr(A); 
+        end
         
-        if(isSymmetric == 1)
-            A = generate_toeplitz_symmetric(blockSize, matrixSize);
-        else
-            A = generate_toeplitz_asymmetric(blockSize, matrixSize);
-       end
+        save('matrixA.mat', 'A');
+    else
+        file = matfile('matrixA.mat');
+        A = file.A;
+        
+        if(size(A, 1) ~= blockSize * matrixSize)
+            msgbox('Size Mismatch');
+            return
+        end
         
     end
     
@@ -40,6 +58,10 @@ function [] = block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPertur
             F = generate_toeplitz_asymmetric(blockSize, matrixSize);
         end
         
+        if(isHankel == 1)
+           F = fliplr(F); 
+        end
+        
         c = norm(F) / epsilon;
         E = F / c;
         
@@ -52,7 +74,7 @@ function [] = block_toeplitz_pseudospectra(blockSize, matrixSize, numberOfPertur
     % Plot the combined eigenvalues of the perturbations
     plot(real(x), imag(x), '.');
     axis equal;
-    
+
     % Wait 1 second
     pause(1); 
     
